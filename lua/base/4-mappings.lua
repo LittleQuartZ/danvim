@@ -131,8 +131,6 @@ if not is_android then
   -- only useful when the option clipboard is commented on ./1-options.lua
   maps.n["<C-y>"] = { '"+y<esc>', desc = "Copy to cliboard" }
   maps.x["<C-y>"] = { '"+y<esc>', desc = "Copy to cliboard" }
-  maps.n["<C-d>"] = { '"+y<esc>dd', desc = "Copy to clipboard and delete line" }
-  maps.x["<C-d>"] = { '"+y<esc>dd', desc = "Copy to clipboard and delete line" }
   maps.n["<C-p>"] = { '"+p<esc>', desc = "Paste from clipboard" }
 end
 
@@ -287,11 +285,11 @@ maps.n["<leader>pv"] = { "<cmd>DistroReadVersion<cr>", desc = "Distro version" }
 maps.n["<leader>pc"] = { "<cmd>DistroReadChangelog<cr>", desc = "Distro changelog" }
 
 -- buffers/tabs [buffers ]--------------------------------------------------
-maps.n["<leader>c"] = { -- Close window and buffer at the same time.
+maps.n["<leader>x"] = { -- Close window and buffer at the same time.
   function() require("heirline-components.buffer").wipe() end,
   desc = "Wipe buffer",
 }
-maps.n["<leader>C"] = { -- Close buffer keeping the window.
+maps.n["<leader>X"] = { -- Close buffer keeping the window.
   function() require("heirline-components.buffer").close() end,
   desc = "Close buffer",
 }
@@ -304,13 +302,25 @@ maps.n["<leader>ba"] = {
   function() vim.cmd "wa" end,
   desc = "Write all changed buffers",
 }
-maps.n["]b"] = {
+-- maps.n["]b"] = {
+--   function()
+--     require("heirline-components.buffer").nav(vim.v.count > 0 and vim.v.count or 1)
+--   end,
+--   desc = "Next buffer",
+-- }
+-- maps.n["[b"] = {
+--   function()
+--     require("heirline-components.buffer").nav(-(vim.v.count > 0 and vim.v.count or 1))
+--   end,
+--   desc = "Previous buffer",
+-- }
+maps.n["<Tab>"] = {
   function()
     require("heirline-components.buffer").nav(vim.v.count > 0 and vim.v.count or 1)
   end,
   desc = "Next buffer",
 }
-maps.n["[b"] = {
+maps.n["<S-Tab>"] = {
   function()
     require("heirline-components.buffer").nav(-(vim.v.count > 0 and vim.v.count or 1))
   end,

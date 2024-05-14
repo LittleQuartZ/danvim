@@ -24,8 +24,8 @@
 --       -> nvim-lightbulb         [lightbulb for code actions]
 --       -> distroupdate.nvim      [distro update]
 
-local is_windows = vim.fn.has('win32') == 1         -- true if on windows
-local is_android = vim.fn.isdirectory('/data') == 1 -- true if on android
+-- local is_windows = vim.fn.has('win32') == 1         -- true if on windows
+-- local is_android = vim.fn.isdirectory('/data') == 1 -- true if on android
 
 return {
   -- [ranger] file browser
@@ -37,27 +37,27 @@ return {
   -- * Delete rnvimr and install some other file browser you like.
   -- * Or enable WLS on Windows and launch neovim from there.
   --   This way you can install and use 'ranger' and its dependency 'pynvim'.
-  {
-    "kevinhwang91/rnvimr",
-    event = "User BaseDefered",
-    cmd = { "RnvimrToggle" },
-    enabled = not is_windows,
-    config = function()
-      -- vim.g.rnvimr_vanilla = 1            -- Often solves issues in your ranger config.
-      vim.g.rnvimr_enable_picker = 1         -- Close rnvimr after choosing a file.
-      vim.g.rnvimr_ranger_cmd = { "ranger" } -- By passing a script like TERM=foot ranger "$@" you can open terminals inside ranger.
-      if is_android then                     -- Open on full screenn
-        vim.g.rnvimr_layout = {
-          relative = "editor",
-          width = 200,
-          height = 100,
-          col = 0,
-          row = 0,
-          style = "minimal",
-        }
-      end
-    end,
-  },
+  -- {
+  --   "kevinhwang91/rnvimr",
+  --   event = "User BaseDefered",
+  --   cmd = { "RnvimrToggle" },
+  --   enabled = not is_windows,
+  --   config = function()
+  --     -- vim.g.rnvimr_vanilla = 1            -- Often solves issues in your ranger config.
+  --     vim.g.rnvimr_enable_picker = 1         -- Close rnvimr after choosing a file.
+  --     vim.g.rnvimr_ranger_cmd = { "ranger" } -- By passing a script like TERM=foot ranger "$@" you can open terminals inside ranger.
+  --     if is_android then                     -- Open on full screenn
+  --       vim.g.rnvimr_layout = {
+  --         relative = "editor",
+  --         width = 200,
+  --         height = 100,
+  --         col = 0,
+  --         row = 0,
+  --         style = "minimal",
+  --       }
+  --     end
+  --   end,
+  -- },
 
   -- project.nvim [project search + auto cd]
   -- https://github.com/ahmedkhalf/project.nvim
@@ -145,7 +145,7 @@ return {
     "max397574/better-escape.nvim",
     event = "InsertCharPre",
     opts = {
-      mapping = {},
+      mapping = { "jj" },
       timeout = 300,
     },
   },
@@ -154,30 +154,30 @@ return {
   -- https://github.com/akinsho/toggleterm.nvim
   -- neovim bug → https://github.com/neovim/neovim/issues/21106
   -- workarounds → https://github.com/akinsho/toggleterm.nvim/wiki/Mouse-support
-  {
-    "akinsho/toggleterm.nvim",
-    cmd = { "ToggleTerm", "TermExec" },
-    opts = {
-      highlights = {
-        Normal = { link = "Normal" },
-        NormalNC = { link = "NormalNC" },
-        NormalFloat = { link = "Normal" },
-        FloatBorder = { link = "FloatBorder" },
-        StatusLine = { link = "StatusLine" },
-        StatusLineNC = { link = "StatusLineNC" },
-        WinBar = { link = "WinBar" },
-        WinBarNC = { link = "WinBarNC" },
-      },
-      size = 10,
-      open_mapping = [[<F7>]],
-      shading_factor = 2,
-      direction = "float",
-      float_opts = {
-        border = "rounded",
-        highlights = { border = "Normal", background = "Normal" },
-      },
-    },
-  },
+  -- {
+  --   "akinsho/toggleterm.nvim",
+  --   cmd = { "ToggleTerm", "TermExec" },
+  --   opts = {
+  --     highlights = {
+  --       Normal = { link = "Normal" },
+  --       NormalNC = { link = "NormalNC" },
+  --       NormalFloat = { link = "Normal" },
+  --       FloatBorder = { link = "FloatBorder" },
+  --       StatusLine = { link = "StatusLine" },
+  --       StatusLineNC = { link = "StatusLineNC" },
+  --       WinBar = { link = "WinBar" },
+  --       WinBarNC = { link = "WinBarNC" },
+  --     },
+  --     size = 10,
+  --     open_mapping = [[<F7>]],
+  --     shading_factor = 2,
+  --     direction = "float",
+  --     float_opts = {
+  --       border = "rounded",
+  --       highlights = { border = "Normal", background = "Normal" },
+  --     },
+  --   },
+  -- },
 
   -- session-manager [session]
   -- https://github.com/Shatur/neovim-session-manager

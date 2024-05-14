@@ -154,7 +154,8 @@ function M.apply_user_lsp_settings(server_name)
     if is_schemastore_loaded then opts.settings = { yaml = { schemas = schemastore.yaml.schemas() } } end
   end
   if server_name == "lua_ls" then -- Disable third party checking
-    pcall(require, "neodev")
+    local _, neodev = pcall(require, "neodev")
+    neodev.setup()
     opts.settings = { Lua = { workspace = { checkThirdParty = false } } }
   end
 

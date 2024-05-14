@@ -162,25 +162,25 @@ return {
   -- nvim-java [java support]
   -- https://github.com/nvim-java/nvim-java
   -- Reliable jdtls support. Must go before mason-lspconfig and lsp-config.
-  {
-    "nvim-java/nvim-java",
-    ft = { "java" },
-    dependencies = {
-      "nvim-java/lua-async-await",
-      "nvim-java/nvim-java-core",
-      "nvim-java/nvim-java-test",
-      "nvim-java/nvim-java-dap",
-      "MunifTanjim/nui.nvim",
-      "neovim/nvim-lspconfig",
-      "mfussenegger/nvim-dap",
-      "williamboman/mason.nvim",
-    },
-    opts = {
-      notifications = {
-        dap = false,
-      },
-    },
-  },
+  -- {
+  --   "nvim-java/nvim-java",
+  --   ft = { "java" },
+  --   dependencies = {
+  --     "nvim-java/lua-async-await",
+  --     "nvim-java/nvim-java-core",
+  --     "nvim-java/nvim-java-test",
+  --     "nvim-java/nvim-java-dap",
+  --     "MunifTanjim/nui.nvim",
+  --     "neovim/nvim-lspconfig",
+  --     "mfussenegger/nvim-dap",
+  --     "williamboman/mason.nvim",
+  --   },
+  --   opts = {
+  --     notifications = {
+  --       dap = false,
+  --     },
+  --   },
+  -- },
 
   --  nvim-lspconfig [lsp configs]
   --  https://github.com/neovim/nvim-lspconfig
@@ -188,12 +188,14 @@ return {
   {
     "neovim/nvim-lspconfig",
     event = "User BaseFile",
-    dependencies = "nvim-java/nvim-java",
+    -- dependencies = "nvim-java/nvim-java",
     config = function()
       -- nvim-java DAP support.
-      if utils.is_available("nvim-java") then
-        require("lspconfig").jdtls.setup({})
-      end
+      -- if utils.is_available("nvim-java") then
+      --   require("lspconfig").jdtls.setup({})
+      -- end
+      utils_lsp.setup("lua_ls")
+      utils_lsp.apply_default_lsp_settings() -- Apply our default lsp settings.
     end
   },
 
@@ -201,20 +203,20 @@ return {
   -- https://github.com/williamboman/mason-lspconfig.nvim
   -- This plugin auto starts the lsp servers installed by Mason
   -- every time Neovim trigger the event FileType.
-  {
-    "williamboman/mason-lspconfig.nvim",
-    dependencies = { "neovim/nvim-lspconfig" },
-    event = "User BaseFile",
-    opts = function(_, opts)
-      if not opts.handlers then opts.handlers = {} end
-      opts.handlers[1] = function(server) utils_lsp.setup(server) end
-    end,
-    config = function(_, opts)
-      require("mason-lspconfig").setup(opts)
-      utils_lsp.apply_default_lsp_settings() -- Apply our default lsp settings.
-      utils.trigger_event("FileType")        -- This line starts this plugin.
-    end,
-  },
+  -- {
+  --   "williamboman/mason-lspconfig.nvim",
+  --   dependencies = { "neovim/nvim-lspconfig" },
+  --   event = "User BaseFile",
+  --   opts = function(_, opts)
+  --     if not opts.handlers then opts.handlers = {} end
+  --     opts.handlers[1] = function(server) utils_lsp.setup(server) end
+  --   end,
+  --   config = function(_, opts)
+  --     require("mason-lspconfig").setup(opts)
+  --     utils_lsp.apply_default_lsp_settings() -- Apply our default lsp settings.
+  --     utils.trigger_event("FileType")        -- This line starts this plugin.
+  --   end,
+  -- },
 
   --  mason [lsp package manager]
   --  https://github.com/williamboman/mason.nvim
@@ -273,13 +275,22 @@ return {
     opts = function()
       -- You can customize your formatters here.
       local nls = require("null-ls")
-      nls.builtins.formatting.shfmt.with({
-        command = "shfmt",
-        args = { "-i", "2", "-filename", "$FILENAME" },
-      })
+
+      -- nls.builtins.formatting.shfmt.with({
+      --   command = "shfmt",
+      --   args = { "-i", "2", "-filename", "$FILENAME" },
+      -- })
+
+      local sources = {
+        nls.builtins.formatting.stylua,
+        nls.builtins.diagnostics.selene,
+      }
 
       -- Attach the user lsp mappings to every none-ls client.
-      return { on_attach = utils_lsp.apply_user_lsp_mappings }
+      return {
+        on_attach = utils_lsp.apply_user_lsp_mappings,
+        sources = sources
+      }
     end
   },
 
@@ -450,6 +461,7 @@ return {
         sources = cmp.config.sources {
           { name = "nvim_lsp", priority = 1000 },
           { name = "luasnip",  priority = 750 },
+          { name = "copilot",  priority = 600 },
           { name = "buffer",   priority = 500 },
           { name = "path",     priority = 250 },
         },

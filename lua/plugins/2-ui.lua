@@ -130,20 +130,11 @@ return {
         }
       else
         dashboard.section.header.val = {
-          [[888b      88                                                           88]],
-          [[8888b     88                                                           88]],
-          [[88 `8b    88                                                           88]],
-          [[88  `8b   88   ,adPPYba,   8b,dPPYba,  88,dPYba,,adPYba,   ,adPPYYba,  88]],
-          [[88   `8b  88  a8"     "8a  88P'   "Y8  88P'   "88"    "8a  ""     `Y8  88]],
-          [[88    `8b 88  8b       d8  88          88      88      88  ,adPPPPP88  88]],
-          [[88     `8888  "8a,   ,a8"  88          88      88      88  88,    ,88  88]],
-          [[88      `888   `"YbbdP"'   88          88      88      88  `"8bbdP"Y8  88]],
-          [[                                    __                ]],
-          [[                      ___   __  __ /\_\    ___ ___    ]],
-          [[                    /' _ `\/\ \/\ \\/\ \ /' __` __`\  ]],
-          [[                    /\ \/\ \ \ \_/ |\ \ \/\ \/\ \/\ \ ]],
-          [[                    \ \_\ \_\ \___/  \ \_\ \_\ \_\ \_\]],
-          [[                     \/_/\/_/\/__/    \/_/\/_/\/_/\/_/]],
+          [[     _                  _           ]],
+          [[  __| | __ _ _ ____   _(_)_ __ ___  ]],
+          [[ / _` |/ _` | '_ \ \ / / | '_ ` _ \ ]],
+          [[| (_| | (_| | | | \ V /| | | | | | |]],
+          [[ \__,_|\__,_|_| |_|\_/ |_|_| |_| |_|]]
         }
       end
 
@@ -151,8 +142,9 @@ return {
       vim.cmd "highlight DashboardHeader guifg=#F7778F"
 
       -- If on windows, don't show the 'ranger' button
-      local ranger_button = dashboard.button("r", "🐍 Ranger  ", "<cmd>RnvimrToggle<CR>")
-      if is_windows then ranger_button = nil end
+      -- local ranger_button = dashboard.button("r", "🐍 Ranger  ", "<cmd>RnvimrToggle<CR>")
+      local ranger_button = nil
+      -- if is_windows then ranger_button = nil end
 
       -- Buttons
       dashboard.section.buttons.val = {
@@ -574,6 +566,7 @@ return {
         Array = "󰅪",
         Boolean = "⊨",
         Class = "󰌗",
+        Copilot = "",
         Constructor = "",
         Key = "󰌆",
         Namespace = "󰅪",

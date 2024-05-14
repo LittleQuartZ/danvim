@@ -331,38 +331,48 @@ return {
   --  NOTE: In order for this plugin to work, you will have to set
   --        the next env var in your OS:
   --        OPENAI_API_KEY="my_key_here"
-  {
-    "dense-analysis/neural",
-    cmd = { "Neural" },
-    config = function()
-      require("neural").setup {
-        source = {
-          openai = {
-            api_key = vim.env.OPENAI_API_KEY,
-          },
-        },
-        ui = {
-          prompt_icon = ">",
-        },
-      }
-    end,
-  },
+  -- {
+  --   "dense-analysis/neural",
+  --   cmd = { "Neural" },
+  --   config = function()
+  --     require("neural").setup {
+  --       source = {
+  --         openai = {
+  --           api_key = vim.env.OPENAI_API_KEY,
+  --         },
+  --       },
+  --       ui = {
+  --         prompt_icon = ">",
+  --       },
+  --     }
+  --   end,
+  -- },
 
   --  copilot [github code suggestions]
   --  https://github.com/github/copilot.vim
   --  As alternative to chatgpt, you can use copilot uncommenting this.
   --  Then you must run :Copilot setup
-  -- {
-  --   "github/copilot.vim",
-  --   event = "User BaseFile"
-  -- },
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "InsertEnter",
+    config = function()
+      require("copilot").setup({
+        suggestion = { enabled = false },
+        panel = { enabled = false },
+      })
+    end,
+  },
   -- copilot-cmp
   -- https://github.com/zbirenbaum/copilot-cmp
-  -- {
-  --   "zbirenbaum/copilot-cmp",
-  --   opts = { suggesion = { enabled = false }, panel = { enabled = false } },
-  --   config = function (_, opts) require("copilot_cmp").setup(opts) end
-  -- },
+  {
+    "zbirenbaum/copilot-cmp",
+    dependencies = {
+      "zbirenbaum/copilot.lua"
+    },
+    opts = { suggestion = { enabled = false }, panel = { enabled = false } },
+    config = function (_, opts) require("copilot_cmp").setup(opts) end
+  },
 
   -- [guess-indent]
   -- https://github.com/NMAC427/guess-indent.nvim
@@ -451,27 +461,27 @@ return {
       local dap = require("dap")
 
       -- C#
-      dap.adapters.coreclr = {
-        type = 'executable',
-        command = vim.fn.stdpath('data') .. '/mason/bin/netcoredbg',
-        args = { '--interpreter=vscode' }
-      }
-      dap.configurations.cs = {
-        {
-          type = "coreclr",
-          name = "launch - netcoredbg",
-          request = "launch",
-          program = function() -- Ask the user what executable wants to debug
-            return vim.fn.input('Path to dll: ', vim.fn.getcwd() .. '/bin/Program.exe', 'file')
-          end,
-        },
-      }
+      -- dap.adapters.coreclr = {
+      --   type = 'executable',
+      --   command = vim.fn.stdpath('data') .. '/mason/bin/netcoredbg',
+      --   args = { '--interpreter=vscode' }
+      -- }
+      -- dap.configurations.cs = {
+      --   {
+      --     type = "coreclr",
+      --     name = "launch - netcoredbg",
+      --     request = "launch",
+      --     program = function() -- Ask the user what executable wants to debug
+      --       return vim.fn.input('Path to dll: ', vim.fn.getcwd() .. '/bin/Program.exe', 'file')
+      --     end,
+      --   },
+      -- }
 
       -- F#
-      dap.configurations.fsharp = dap.configurations.cs
+      -- dap.configurations.fsharp = dap.configurations.cs
 
       -- Visual basic dotnet
-      dap.configurations.vb = dap.configurations.cs
+      -- dap.configurations.vb = dap.configurations.cs
 
       -- Java
       -- Note: The java debugger jdtls is automatically spawned and configured
@@ -479,19 +489,19 @@ return {
       -- Compatible with maven, gradle, and projects created by eclipse.
 
       -- Python
-      dap.adapters.python = {
-        type = 'executable',
-        command = vim.fn.stdpath('data') .. '/mason/packages/debugpy/venv/bin/python',
-        args = { '-m', 'debugpy.adapter' },
-      }
-      dap.configurations.python = {
-        {
-          type = "python",
-          request = "launch",
-          name = "Launch file",
-          program = "${file}", -- This configuration will launch the current file if used.
-        },
-      }
+      -- dap.adapters.python = {
+      --   type = 'executable',
+      --   command = vim.fn.stdpath('data') .. '/mason/packages/debugpy/venv/bin/python',
+      --   args = { '-m', 'debugpy.adapter' },
+      -- }
+      -- dap.configurations.python = {
+      --   {
+      --     type = "python",
+      --     request = "launch",
+      --     name = "Launch file",
+      --     program = "${file}", -- This configuration will launch the current file if used.
+      --   },
+      -- }
 
       -- Lua
       dap.adapters.nlua = function(callback, config)
@@ -507,31 +517,31 @@ return {
       }
 
       -- C
-      dap.adapters.codelldb = {
-        type = 'server',
-        port = "${port}",
-        executable = {
-          command = vim.fn.stdpath('data') .. '/mason/bin/codelldb',
-          args = { "--port", "${port}" },
-          detached = function() if is_windows then return false else return true end end,
-        }
-      }
-      dap.configurations.c = {
-        {
-          name = 'Launch',
-          type = 'codelldb',
-          request = 'launch',
-          program = function() -- Ask the user what executable wants to debug
-            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/bin/program', 'file')
-          end,
-          cwd = '${workspaceFolder}',
-          stopOnEntry = false,
-          args = {},
-        },
-      }
+      -- dap.adapters.codelldb = {
+      --   type = 'server',
+      --   port = "${port}",
+      --   executable = {
+      --     command = vim.fn.stdpath('data') .. '/mason/bin/codelldb',
+      --     args = { "--port", "${port}" },
+      --     detached = function() if is_windows then return false else return true end end,
+      --   }
+      -- }
+      -- dap.configurations.c = {
+      --   {
+      --     name = 'Launch',
+      --     type = 'codelldb',
+      --     request = 'launch',
+      --     program = function() -- Ask the user what executable wants to debug
+      --       return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/bin/program', 'file')
+      --     end,
+      --     cwd = '${workspaceFolder}',
+      --     stopOnEntry = false,
+      --     args = {},
+      --   },
+      -- }
 
       -- C++
-      dap.configurations.cpp = dap.configurations.c
+      -- dap.configurations.cpp = dap.configurations.c
 
       -- Rust
       dap.configurations.rust = {
@@ -571,78 +581,78 @@ return {
       -- Requires:
       -- * You have initialized your module with 'go mod init module_name'.
       -- * You :cd your project before running DAP.
-      dap.adapters.delve = {
-        type = 'server',
-        port = '${port}',
-        executable = {
-          command = vim.fn.stdpath('data') .. '/mason/packages/delve/dlv',
-          args = { 'dap', '-l', '127.0.0.1:${port}' },
-        }
-      }
-      dap.configurations.go = {
-        {
-          type = "delve",
-          name = "Compile module and debug this file",
-          request = "launch",
-          program = "./${relativeFileDirname}",
-        },
-        {
-          type = "delve",
-          name = "Compile module and debug this file (test)",
-          request = "launch",
-          mode = "test",
-          program = "./${relativeFileDirname}"
-        },
-      }
+      -- dap.adapters.delve = {
+      --   type = 'server',
+      --   port = '${port}',
+      --   executable = {
+      --     command = vim.fn.stdpath('data') .. '/mason/packages/delve/dlv',
+      --     args = { 'dap', '-l', '127.0.0.1:${port}' },
+      --   }
+      -- }
+      -- dap.configurations.go = {
+      --   {
+      --     type = "delve",
+      --     name = "Compile module and debug this file",
+      --     request = "launch",
+      --     program = "./${relativeFileDirname}",
+      --   },
+      --   {
+      --     type = "delve",
+      --     name = "Compile module and debug this file (test)",
+      --     request = "launch",
+      --     mode = "test",
+      --     program = "./${relativeFileDirname}"
+      --   },
+      -- }
 
       -- Dart / Flutter
-      dap.adapters.dart = {
-        type = 'executable',
-        command = vim.fn.stdpath('data') .. '/mason/bin/dart-debug-adapter',
-        args = { 'dart' }
-      }
-      dap.adapters.flutter = {
-        type = 'executable',
-        command = vim.fn.stdpath('data') .. '/mason/bin/dart-debug-adapter',
-        args = { 'flutter' }
-      }
-      dap.configurations.dart = {
-        {
-          type = "dart",
-          request = "launch",
-          name = "Launch dart",
-          dartSdkPath = "/opt/flutter/bin/cache/dart-sdk/", -- ensure this is correct
-          flutterSdkPath = "/opt/flutter",                  -- ensure this is correct
-          program = "${workspaceFolder}/lib/main.dart",     -- ensure this is correct
-          cwd = "${workspaceFolder}",
-        },
-        {
-          type = "flutter",
-          request = "launch",
-          name = "Launch flutter",
-          dartSdkPath = "/opt/flutter/bin/cache/dart-sdk/", -- ensure this is correct
-          flutterSdkPath = "/opt/flutter",                  -- ensure this is correct
-          program = "${workspaceFolder}/lib/main.dart",     -- ensure this is correct
-          cwd = "${workspaceFolder}",
-        }
-      }
+      -- dap.adapters.dart = {
+      --   type = 'executable',
+      --   command = vim.fn.stdpath('data') .. '/mason/bin/dart-debug-adapter',
+      --   args = { 'dart' }
+      -- }
+      -- dap.adapters.flutter = {
+      --   type = 'executable',
+      --   command = vim.fn.stdpath('data') .. '/mason/bin/dart-debug-adapter',
+      --   args = { 'flutter' }
+      -- }
+      -- dap.configurations.dart = {
+      --   {
+      --     type = "dart",
+      --     request = "launch",
+      --     name = "Launch dart",
+      --     dartSdkPath = "/opt/flutter/bin/cache/dart-sdk/", -- ensure this is correct
+      --     flutterSdkPath = "/opt/flutter",                  -- ensure this is correct
+      --     program = "${workspaceFolder}/lib/main.dart",     -- ensure this is correct
+      --     cwd = "${workspaceFolder}",
+      --   },
+      --   {
+      --     type = "flutter",
+      --     request = "launch",
+      --     name = "Launch flutter",
+      --     dartSdkPath = "/opt/flutter/bin/cache/dart-sdk/", -- ensure this is correct
+      --     flutterSdkPath = "/opt/flutter",                  -- ensure this is correct
+      --     program = "${workspaceFolder}/lib/main.dart",     -- ensure this is correct
+      --     cwd = "${workspaceFolder}",
+      --   }
+      -- }
 
       -- Kotlin
       -- Kotlin projects have very weak project structure conventions.
       -- You must manually specify what the project root and main class are.
-      dap.adapters.kotlin = {
-        type = 'executable',
-        command = vim.fn.stdpath('data') .. '/mason/bin/kotlin-debug-adapter',
-      }
-      dap.configurations.kotlin = {
-        {
-          type = 'kotlin',
-          request = 'launch',
-          name = 'Launch kotlin program',
-          projectRoot = "${workspaceFolder}/app",     -- ensure this is correct
-          mainClass = "AppKt",                        -- ensure this is correct
-        },
-      }
+      -- dap.adapters.kotlin = {
+      --   type = 'executable',
+      --   command = vim.fn.stdpath('data') .. '/mason/bin/kotlin-debug-adapter',
+      -- }
+      -- dap.configurations.kotlin = {
+      --   {
+      --     type = 'kotlin',
+      --     request = 'launch',
+      --     name = 'Launch kotlin program',
+      --     projectRoot = "${workspaceFolder}/app",     -- ensure this is correct
+      --     mainClass = "AppKt",                        -- ensure this is correct
+      --   },
+      -- }
 
       -- Javascript / Typescript (firefox)
       dap.adapters.firefox = {
@@ -692,68 +702,68 @@ return {
       -- dap.configurations.typescriptreact = dap.configurations.typescript
 
       -- PHP
-      dap.adapters.php = {
-        type = 'executable',
-        command = vim.fn.stdpath("data") .. '/mason/bin/php-debug-adapter',
-      }
-      dap.configurations.php = {
-        {
-          type = 'php',
-          request = 'launch',
-          name = 'Listen for Xdebug',
-          port = 9000
-        }
-      }
+      -- dap.adapters.php = {
+      --   type = 'executable',
+      --   command = vim.fn.stdpath("data") .. '/mason/bin/php-debug-adapter',
+      -- }
+      -- dap.configurations.php = {
+      --   {
+      --     type = 'php',
+      --     request = 'launch',
+      --     name = 'Listen for Xdebug',
+      --     port = 9000
+      --   }
+      -- }
 
       -- Shell
-      dap.adapters.bashdb = {
-        type = 'executable',
-        command = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/bash-debug-adapter',
-        name = 'bashdb',
-      }
-      dap.configurations.sh = {
-        {
-          type = 'bashdb',
-          request = 'launch',
-          name = "Launch file",
-          showDebugOutput = true,
-          pathBashdb = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb',
-          pathBashdbLib = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/extension/bashdb_dir',
-          trace = true,
-          file = "${file}",
-          program = "${file}",
-          cwd = '${workspaceFolder}',
-          pathCat = "cat",
-          pathBash = "/bin/bash",
-          pathMkfifo = "mkfifo",
-          pathPkill = "pkill",
-          args = {},
-          env = {},
-          terminalKind = "integrated",
-        }
-      }
+      -- dap.adapters.bashdb = {
+      --   type = 'executable',
+      --   command = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/bash-debug-adapter',
+      --   name = 'bashdb',
+      -- }
+      -- dap.configurations.sh = {
+      --   {
+      --     type = 'bashdb',
+      --     request = 'launch',
+      --     name = "Launch file",
+      --     showDebugOutput = true,
+      --     pathBashdb = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/extension/bashdb_dir/bashdb',
+      --     pathBashdbLib = vim.fn.stdpath("data") .. '/mason/packages/bash-debug-adapter/extension/bashdb_dir',
+      --     trace = true,
+      --     file = "${file}",
+      --     program = "${file}",
+      --     cwd = '${workspaceFolder}',
+      --     pathCat = "cat",
+      --     pathBash = "/bin/bash",
+      --     pathMkfifo = "mkfifo",
+      --     pathPkill = "pkill",
+      --     args = {},
+      --     env = {},
+      --     terminalKind = "integrated",
+      --   }
+      -- }
 
       -- Elixir
-      dap.adapters.mix_task = {
-        type = 'executable',
-        command = vim.fn.stdpath("data") .. '/mason/bin/elixir-ls-debugger',
-        args = {}
-      }
-      dap.configurations.elixir = {
-        {
-          type = "mix_task",
-          name = "mix test",
-          task = 'test',
-          taskArgs = { "--trace" },
-          request = "launch",
-          startApps = true, -- for Phoenix projects
-          projectDir = "${workspaceFolder}",
-          requireFiles = {
-            "test/**/test_helper.exs",
-            "test/**/*_test.exs"
-          }
-        },
-      }
+      -- dap.adapters.mix_task = {
+      --   type = 'executable',
+      --   command = vim.fn.stdpath("data") .. '/mason/bin/elixir-ls-debugger',
+      --   args = {}
+      -- }
+      -- dap.configurations.elixir = {
+      --   {
+      --     type = "mix_task",
+      --     name = "mix test",
+      --     task = 'test',
+      --     taskArgs = { "--trace" },
+      --     request = "launch",
+      --     startApps = true, -- for Phoenix projects
+      --     projectDir = "${workspaceFolder}",
+      --     requireFiles = {
+      --       "test/**/test_helper.exs",
+      --       "test/**/*_test.exs"
+      --     }
+      --   },
+      -- }
     end, -- of dap config
     dependencies = {
       "rcarriga/nvim-dap-ui",
